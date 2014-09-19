@@ -4,23 +4,26 @@
 #include "option.h"
 #include "bs.h"
 #include "pnl/pnl_random.h"
+#include "parser.h"
 
 class MonteCarlo
 {
 public:
   BS *mod_; /*! pointeur vers le modèle */
   Option *opt_; /*! pointeur sur l'option */
-  PnlRng *rng; /*! pointeur sur le générateur */
   double h_; /*! pas de différence finie */
   int samples_; /*! nombre de tirages Monte Carlo */
 
+    /*constructeur del fuego*/
+  MonteCarlo(Param *P, Option *opt, int samples);  
+    ~MonteCarlo();
   /**
    * Calcule le prix de l'option à la date 0
    *
    * @param[out] prix valeur de l'estimateur Monte Carlo
    * @param[out] ic largeur de l'intervalle de confiance
    */
-  void price(double &prix, double &ic);
+  void price(double &prix, double &ic, PnlRng *rng);
 
   /**
    * Calcule le prix de l'option à la date t
@@ -33,6 +36,8 @@ public:
    * de confiance sur le calcul du prix
    */
   void price(const PnlMat *past, double t, double &prix, double &ic);
+
+
 };
 
 #endif /* _MC_H */
