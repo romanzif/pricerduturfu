@@ -1,0 +1,18 @@
+class Barrier_l : public Option 
+{
+	protected :
+		double *payoffCoeff;
+		double *lowerBarrier;
+		int tailleV;
+	public:
+		double payoff(double **Mat);
+
+	// Constructor
+	Barrier_l();
+	Barrier_l(const Barrier_l& theBarrier_l);
+	Barrier_l(double *thePayoffCoeff, double maturity, int strike, int timeSteps, int size, int thetailleV, double *theLowerBarrier);
+	
+	// Destructor 
+	virtual ~Barrier_l();
+
+}
