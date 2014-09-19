@@ -41,4 +41,7 @@ install(TARGETS parser-test DESTINATION bin)
 # target_link_libraries(mc-pricer ${LIBS})
 # install(TARGETS mc-pricer DESTINATION bin)
 
-
+# Testing the option
+add_executable(option-test src/asian.cpp src/basket.cpp src/barrier.cpp src/barrier_l.cpp src/barrier_u.cpp src/option.cpp src/parser.cpp src/main.cpp)
+target_link_libraries(option-test ${LIBS})
+install(TARGETS option-test DESTINATION bin)
