@@ -1,8 +1,10 @@
 #ifndef _OPTION_H
 #define _OPTION_H
+#include <cstddef>
+#include <iostream>
 
-//#include "pnl/pnl_vector.h"
-//#include "pnl/pnl_matrix.h"
+#include "pnl/pnl_vector.h"
+#include "pnl/pnl_matrix.h"
 
 /// \brief Classe Option abstraite
 class Option
@@ -20,25 +22,17 @@ public:
    * par la fonction asset.
    * @return phi(trajectoire)
    */
-  int getStrike() {
-	return strike;
-  }
+  int getStrike() const;
 
-  double getMaturity () {
-	return T_;
-  }
+  double getMaturity() const;
 
-  int getTimeSteps () {
-	return TimeSteps;
-  }
+  int getTimeSteps () const;
 
-  int getSize () {
-	return size_;
-  }
+  int getSize () const;
 
   void set ();
-  void set (int strk, double T, int Time, int taille);
-  //virtual double payoff(const PnlMat *path) = 0;
+  void set (const int strk, const double T, const int Time, const int taille);
+  virtual double payoff(const PnlMat *path) = 0;
 };
 
 
