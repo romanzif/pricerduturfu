@@ -34,7 +34,7 @@ Asian::Asian(Param& theParam):Option(), payoffCoeff(0) {
 	theParam.extract("maturity",theMaturity);
 	theParam.extract("timestep number", theTimeSteps);
 	theParam.extract("option size", theSize);
-	std::cout<< theMaturity << std::endl;
+	std::cout << theMaturity << std::endl;
 	Option::set((int)theStrike,theMaturity,theTimeSteps,theSize);
 	theParam.extract("payoff coefficients", thePayoffCoeff);
 	if(thePayoffCoeff->size==1){
