@@ -70,7 +70,7 @@ void Barrier_u::print()
 
 double Barrier_u::payoff(const PnlMat *path) {
 	_PnlVect * lastrow = pnl_vect_new();
-	pnl_mat_get_row(lastrow, path, TimeSteps_-1);
+	pnl_mat_get_row(lastrow, path, path->m-1);
 	double prod = pnl_vect_scalar_prod(lastrow, payoffCoeff) - strike;
 	if (std::max(prod,0.0) == 0.0) {
 		std::cout<< "ici" << std::endl;

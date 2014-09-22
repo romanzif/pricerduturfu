@@ -1,5 +1,8 @@
 #include "barrier_l.h"
 
+
+using namespace std;
+
 Barrier_l::~Barrier_l()
 {
 	_PnlVect ** destruct =&payoffCoeff;
@@ -41,6 +44,7 @@ Barrier_l::Barrier_l(Param& theParam):Option(), payoffCoeff(0) {
 	_PnlVect* theLowerBarrier;
 	theParam.extract("strike",theStrike);
 	theParam.extract("maturity",theMaturity);
+	cout<<"la matu est"<<theMaturity<<endl;
 	theParam.extract("timestep number", theTimeSteps);
 	theParam.extract("option size", theSize);
 	Option::set((int)theStrike,theMaturity,theTimeSteps,theSize);
