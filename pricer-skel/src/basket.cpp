@@ -57,9 +57,9 @@ double Basket::payoff(const PnlMat *path) {
 	PnlVect * lastrow = pnl_vect_new();
 	pnl_mat_get_row(lastrow, path, TimeSteps_-1);
 	double prod = pnl_vect_scalar_prod(lastrow, payoffCoeff) - strike;
-	if (std::max(sum,0.0) == 0.0) {
+	if (std::max(prod,0.0) == 0.0) {
 		return 0.0;
 	}
-	return sum;
+	return prod;
 }
 
