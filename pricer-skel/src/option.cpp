@@ -1,5 +1,6 @@
 #include "option.h"
 
+
   int Option::getStrike() const {
 	return strike;
   }

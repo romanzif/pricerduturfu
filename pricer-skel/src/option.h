@@ -22,6 +22,7 @@ public:
    * par la fonction asset.
    * @return phi(trajectoire)
    */
+  
   int getStrike() const;
 
   double getMaturity() const;
