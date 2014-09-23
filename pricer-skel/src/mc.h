@@ -13,9 +13,10 @@ public:
   Option *opt_; /*! pointeur sur l'option */
   double h_; /*! pas de différence finie */
   int samples_; /*! nombre de tirages Monte Carlo */
+  PnlRng *rng_;
 
     /*constructeur del fuego*/
-  MonteCarlo(Param *P, Option *opt, int samples);  
+  MonteCarlo(Param *P, Option *opt, PnlRng *rng);  
     ~MonteCarlo();
   /**
    * Calcule le prix de l'option à la date 0
@@ -23,7 +24,7 @@ public:
    * @param[out] prix valeur de l'estimateur Monte Carlo
    * @param[out] ic largeur de l'intervalle de confiance
    */
-  void price(double &prix, double &ic, PnlRng *rng);
+  void price(double &prix, double &ic);
 
   /**
    * Calcule le prix de l'option à la date t
