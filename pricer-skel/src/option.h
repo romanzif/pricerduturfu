@@ -9,11 +9,14 @@
 /// \brief Classe Option abstraite
 class Option
 {
-public:
-  int strike;
+protected:
+  PnlVect * payOffCoeff_;
+  double S_;
   double T_; /// maturité
   int TimeSteps_; /// nombre de pas de temps de discrétisation
   int size_; /// dimension du modèle, redondant avec BS::size_
+
+public:  
   /**
    * Calcule la valeur du payoff sur la trajectoire
    *
@@ -22,18 +25,15 @@ public:
    * par la fonction asset.
    * @return phi(trajectoire)
    */
-  
-  int getStrike() const;
-
-  double getMaturity() const;
-
-  int getTimeSteps () const;
-
-  int getSize () const;
-
-  void set ();
-  void set (const int strk, const double T, const int Time, const int taille);
   virtual double payoff(const PnlMat *path) = 0;
+
+  virtual ~Option();
+
+  PnlVect* getPayOffCoeff() const;
+  double getStrike() const;
+  double getMaturity() const;
+  int getTimeSteps () const;
+  int getSize () const;
 };
 
 

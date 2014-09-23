@@ -1,8 +1,12 @@
 #include "option.h"
 
 
-  int Option::getStrike() const {
-	return strike;
+  PnlVect* Option::getPayOffCoeff() const {
+    return payOffCoeff_;
+  }
+
+  double Option::getStrike() const {
+	  return S_;
   }
 
   double Option::getMaturity() const{
@@ -17,10 +21,4 @@
 	return size_;
   }
 
-  void Option::set () {}
-  void Option::set (const int strk, const double T, const int Time, const int taille) {
-	strike = strk;
-	T_ = T;
-	TimeSteps_ = Time;
-	size_ = taille;
-  }
+  Option::~Option() { pnl_vect_free(&payOffCoeff_); };
