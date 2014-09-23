@@ -43,10 +43,6 @@ install(TARGETS parser-test DESTINATION bin)
 
 # Testing the option
 
-add_executable(option-test src/asian.cpp src/performance.cpp src/basket.cpp src/barrier_l.cpp src/barrier_u.cpp src/option.cpp src/parser.cpp src/mc.cpp src/bs.cpp src/main.cpp)
+add_executable(option-test src/asian.cpp src/barrier.cpp src/performance.cpp src/basket.cpp src/barrier_l.cpp src/barrier_u.cpp src/option.cpp src/parser.cpp src/mc.cpp src/bs.cpp src/main.cpp)
 target_link_libraries(option-test ${LIBS})
 install(TARGETS option-test DESTINATION bin)
-
-add_executable(debug src/asian.cpp src/performance.cpp src/basket.cpp src/option.cpp src/parser.cpp src/mc.cpp src/bs.cpp src/main.cpp)
-target_link_libraries(debug ${LIBS})
-install(TARGETS debug DESTINATION bin)

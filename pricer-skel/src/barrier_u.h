@@ -4,7 +4,7 @@
 class Barrier_u : public Option 
 {
 	protected :
-		_PnlVect * upperBarrier_;
+		PnlVect * upperBarrier_;
 	public:
 		double payoff(const PnlMat *path);
 
