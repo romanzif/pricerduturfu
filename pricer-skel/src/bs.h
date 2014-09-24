@@ -94,5 +94,6 @@ public:
   void simul_market(PnlMat *path, double T, int H, PnlRng *rng);
 
   double getR();
+  PnlVect* GetSpot();
 
 };
