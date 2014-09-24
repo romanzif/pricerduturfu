@@ -17,9 +17,9 @@ using namespace std;
   void MonteCarlo::price(double &prix, double &ic)
   {
     //double ListPriceSimulation[samples_];
-    cout<<"TimeSteps_"<<this->opt_->getTimeSteps()<<endl;
-    cout<<"Maturity"<<this->opt_->getMaturity()<<endl;
-    cout<<"Size_"<<this->opt_->getSize()<<endl;
+    cout<<"TimeSteps : "<<this->opt_->getTimeSteps()<<endl;
+    cout<<"Maturity : "<<this->opt_->getMaturity()<<endl;
+    cout<<"Size : "<<this->opt_->getSize()<<endl;
       PnlMat *mat= pnl_mat_create(this->opt_->getTimeSteps()*this->opt_->getMaturity()+1,this->opt_->getSize());
        //double MatPnl[this->opt_->size_][ this->opt_->TimeSteps_];
     prix = 0;
