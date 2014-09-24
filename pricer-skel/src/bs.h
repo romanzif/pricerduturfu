@@ -19,6 +19,7 @@ private:
   PnlVect *sigma_; /// vecteur de volatilités des actifs
   PnlVect *spot_; /// vecteur de valeurs initiales du sous-jacent
   PnlVect *trend; /// vecteur de rendements espérés
+  PnlMat *Gamma; // matrice de correllation
 
 public:
 
