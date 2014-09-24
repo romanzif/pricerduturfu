@@ -100,6 +100,10 @@ void BS::asset(PnlMat *path, double T, int N, PnlRng *rng, bool market, PnlVect*
     return r_;
   }
 
+  PnlVect* BS::GetSpot() {
+    return spot_;
+  }
+
 void BS::simul_market(PnlMat *path, double T, int H, PnlRng *rng) {
     bool market = true;
     asset(path, T, H, rng, market);
