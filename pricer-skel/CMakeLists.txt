@@ -37,12 +37,12 @@ add_executable(parser-test src/parser.cpp src/test_parser.cpp)
 target_link_libraries(parser-test ${LIBS})
 install(TARGETS parser-test DESTINATION bin)
 
-# add_executable(mc-pricer src/parser.cpp src/pricer.cpp)
-# target_link_libraries(mc-pricer ${LIBS})
-# install(TARGETS mc-pricer DESTINATION bin)
+#add_executable(mc-pricer src/parser.cpp)
+#target_link_libraries(mc-pricer ${LIBS})
+#install(TARGETS mc-pricer DESTINATION bin)
 
 # Testing the option
 
-add_executable(option-test src/asian.cpp src/barrier.cpp src/performance.cpp src/basket.cpp src/barrier_l.cpp src/barrier_u.cpp src/option.cpp src/parser.cpp src/mc.cpp src/bs.cpp src/main.cpp)
+add_executable(option-test src/asian.cpp src/barrier.cpp src/performance.cpp src/basket.cpp src/barrier_l.cpp src/barrier_u.cpp src/option.cpp src/parser.cpp src/main.cpp)
 target_link_libraries(option-test ${LIBS})
 install(TARGETS option-test DESTINATION bin)
