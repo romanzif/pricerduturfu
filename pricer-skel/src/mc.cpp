@@ -77,7 +77,7 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
   PnlMat* MatGplus = pnl_mat_create(N+1,D);
   PnlMat* MatGminus = pnl_mat_create(N+1,D);
   for (int d = 0; d < D; d++) {
-    double frontCoef = exp((-r*(T-t))/(M*2*h_*GET(st,d)));
+    double frontCoef = exp((-r*(T-t)))/(M*2*h_*GET(st,d));
     double sum = 0;
     for (int j=1; j < M+1; j++) {
       mod_->asset(simul_mat,t,N,T,rng_,past);
@@ -96,20 +96,15 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
 
 void MonteCarlo::TestDelta(double t) 
 {
- PnlVect *deltavect= pnl_vect_create(40); 
+ PnlVect *deltavect= pnl_vect_create(opt_->getSize()); 
  PnlVect *ic; 
- //PnlMat *past = pnl_mat_create(1,this->opt_->getSize());
-PnlMat *past = pnl_mat_create_from_zero(1,40);
+ PnlMat *past = pnl_mat_create_from_zero(1,opt_->getSize());
+ PnlVect * spot;;
  for (int i=0;i<this->opt_->getSize()-1;i++)
   {
-    MLET(past,0,i) = 100;
-    //pnl_mat_set(past,1,i,100); 
+    MLET(past,0,i) = GET(mod_->getS(),i);
   } 
   delta(past, t, deltavect,ic);
- for (int i=0;i<deltavect->size;i++) 
-  { 
-    cout<<GET(deltavect, i)<<endl; 
-
-  }
+  pnl_vect_print(deltavect);
 }
 

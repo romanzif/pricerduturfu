@@ -17,6 +17,10 @@ using namespace std;
     }
   }
 
+PnlVect* BS::getS() {
+  return spot_;
+}
+
   int BS::getSize() {
     return size_;
   }
