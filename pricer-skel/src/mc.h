@@ -38,6 +38,10 @@ public:
    */
   void price(const PnlMat *past, double t, double &prix, double &ic);
 
+  void delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic);
+
+  void TestDelta(double t) ;
+
 
 };
 
