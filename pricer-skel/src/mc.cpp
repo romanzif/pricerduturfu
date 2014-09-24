@@ -65,34 +65,32 @@ using namespace std;
   }
 
 void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic) {
-    // initialisation des données (calcul g+ et g- ainsi que S~ avec asset)
+  // initialisation des données (calcul g+ et g- ainsi que S~ avec asset)
   double T =  opt_->getMaturity();
-    int D = mod_->getSize();
-    int N = opt_->getTimeSteps() * T;
-    int M = samples_;
-    double r = mod_->getR();
-    PnlVect* st = pnl_vect_create(D);
-    pnl_mat_get_row(st, past, past->m - 1);
-    PnlMat* simul_mat = pnl_mat_create(N+1,D);
-    PnlMat* MatGplus = pnl_mat_create(N+1,D);
-    PnlMat* MatGminus = pnl_mat_create(N+1,D);
-    for (int d = 0; d < D; d++) {
-      double frontCoef = exp((-r*(T-t))/(M*2*h_*GET(st,d)));
-      cout<<frontCoef<<endl;
-      double sum = 0;
-      for (int j=1; j < M+1; j++) {
-  mod_->asset(simul_mat,t,N,T,rng_,past);
-  mod_->shift_asset(MatGplus,simul_mat,d, h_,t,N,T);
-  mod_->shift_asset(MatGminus,simul_mat,d, -h_,t,N,T);
-  sum += opt_->payoff(MatGplus) - opt_->payoff(MatGminus);
-  //cout<<sum<<endl;
-      }
-      LET(delta,d) = frontCoef * sum;
+  int D = mod_->getSize();
+  int N = opt_->getTimeSteps() * T;
+  int M = samples_;
+  double r = mod_->getR();
+  PnlVect* st = pnl_vect_create(D);
+  pnl_mat_get_row(st, past, past->m - 1);
+  PnlMat* simul_mat = pnl_mat_create(N+1,D);
+  PnlMat* MatGplus = pnl_mat_create(N+1,D);
+  PnlMat* MatGminus = pnl_mat_create(N+1,D);
+  for (int d = 0; d < D; d++) {
+    double frontCoef = exp((-r*(T-t))/(M*2*h_*GET(st,d)));
+    double sum = 0;
+    for (int j=1; j < M+1; j++) {
+      mod_->asset(simul_mat,t,N,T,rng_,past);
+      mod_->shift_asset(MatGplus,simul_mat,d, h_,t,N,T);
+      mod_->shift_asset(MatGminus,simul_mat,d, -h_,t,N,T);
+      sum += opt_->payoff(MatGplus) - opt_->payoff(MatGminus);
     }
-    pnl_mat_free(&MatGplus);
-    pnl_mat_free(&MatGminus);
-    pnl_mat_free(&simul_mat);
+    LET(delta,d) = frontCoef * sum;
   }
+  pnl_mat_free(&MatGplus);
+  pnl_mat_free(&MatGminus);
+  pnl_mat_free(&simul_mat);
+}
 
 
 
