@@ -6,7 +6,7 @@ using namespace std;
   {
   	mod_ = new BS(P);
   	opt_= opt;
-    h_ = 0.001;
+    h_ = 0.1;
   	P->extract("sample number", samples_);
     rng_ = rng;
   }
@@ -77,10 +77,15 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
   PnlMat* MatGplus = pnl_mat_create(N+1,D);
   PnlMat* MatGminus = pnl_mat_create(N+1,D);
   for (int d = 0; d < D; d++) {
-    double frontCoef = exp((-r*(T-t)))/(M*2*h_*GET(st,d));
+    double frontCoef = exp(-r*(T-t))/(M*2*h_*GET(st,d));
     double sum = 0;
     for (int j=1; j < M+1; j++) {
-      mod_->asset(simul_mat,t,N,T,rng_,past);
+      if (t==0) {
+	mod_->asset(simul_mat,T,N,rng_,false);
+      }
+      else {
+	mod_->asset(simul_mat,t,N,T,rng_,past);
+      }
       mod_->shift_asset(MatGplus,simul_mat,d, h_,t,N,T);
       mod_->shift_asset(MatGminus,simul_mat,d, -h_,t,N,T);
       sum += opt_->payoff(MatGplus) - opt_->payoff(MatGminus);
@@ -102,7 +107,7 @@ void MonteCarlo::TestDelta(double t)
  PnlVect * spot;;
  for (int i=0;i<this->opt_->getSize()-1;i++)
   {
-    MLET(past,0,i) = GET(mod_->getS(),i);
+    MLET(past,0,i) = GET(mod_->GetSpot(),i);
   } 
   delta(past, t, deltavect,ic);
   pnl_vect_print(deltavect);

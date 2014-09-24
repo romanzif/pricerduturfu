@@ -17,10 +17,6 @@ using namespace std;
     }
   }
 
-PnlVect* BS::getS() {
-  return spot_;
-}
-
   int BS::getSize() {
     return size_;
   }
@@ -102,6 +98,10 @@ void BS::asset(PnlMat *path, double T, int N, PnlRng *rng, bool market, PnlVect*
   }
   double BS::getR() {
     return r_;
+  }
+
+  PnlVect* BS::GetSpot() {
+    return spot_;
   }
 
 void BS::simul_market(PnlMat *path, double T, int H, PnlRng *rng) {
