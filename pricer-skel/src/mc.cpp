@@ -80,11 +80,12 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic
       double frontCoef = exp((-r*(T-t))/(M*2*h_*GET(st,d)));
       cout<<frontCoef<<endl;
       double sum = 0;
-      for (int j=1; j == M; j++) {
+      for (int j=1; j < M+1; j++) {
   mod_->asset(simul_mat,t,N,T,rng_,past);
   mod_->shift_asset(MatGplus,simul_mat,d, h_,t,N,T);
   mod_->shift_asset(MatGminus,simul_mat,d, -h_,t,N,T);
   sum += opt_->payoff(MatGplus) - opt_->payoff(MatGminus);
+  //cout<<sum<<endl;
       }
       LET(delta,d) = frontCoef * sum;
     }
