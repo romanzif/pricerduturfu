@@ -1,5 +1,6 @@
 #include "option.h"
 
+
   PnlVect* Option::getPayOffCoeff() const {
     return payOffCoeff_;
   }
