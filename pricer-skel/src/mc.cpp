@@ -21,15 +21,35 @@ using namespace std;
   PnlMat * MonteCarlo::extract(const PnlMat *pastIn, int indice) {
   int N = opt_->getTimeSteps();
   int D =opt_->getSize();
+  double T =  opt_->getMaturity();
   int RebalancementNumber = H_/N;
-  int taille = indice / RebalancementNumber + 1;
-  PnlMat *pastOut = pnl_mat_create(taille, D);
-  for (int i=0;i<taille; i++) {
+  int taille;
+  int grille = indice / (N * T);
+  if (grille =) {
+    taille = indice / RebalancementNumber + 2;
+    PnlMat *pastOut = pnl_mat_create(taille, D);
+    for (int i=0;i<taille - 1; i++) {
+      for (int j=0; j<D; j++) {
+        cout<<"i = "<<i<<"et j =  "<<j<<endl;
+        MLET(pastOut, i, j) = MGET(pastIn, i * RebalancementNumber, j);
+      }  
+    }
     for (int j=0; j<D; j++) {
-      cout<<"i = "<<i<<"et j =  "<<j<<endl;
-      MLET(pastOut, i, j) = MGET(pastIn, i * RebalancementNumber, j);
-    }  
+        cout<<"i = "<<i<<"et j =  "<<j<<endl;
+        MLET(pastOut, i, j) = MGET(pastIn, taille, j);
+      }  
+    }
+  else {
+    taille = indice / RebalancementNumber + 1;
+    PnlMat *pastOut = pnl_mat_create(taille, D);
+    for (int i=0;i<taille; i++) {
+      for (int j=0; j<D; j++) {
+        cout<<"i = "<<i<<"et j =  "<<j<<endl;
+        MLET(pastOut, i, j) = MGET(pastIn, i * RebalancementNumber, j);
+      }  
+    }
   }
+  
   return pastOut;
   }  
   
