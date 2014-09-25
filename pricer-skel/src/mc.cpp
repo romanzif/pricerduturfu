@@ -14,6 +14,22 @@ using namespace std;
     MonteCarlo::~MonteCarlo() {
     delete(mod_);
   }
+
+  void MonteCarlo::fillMatPast(PnlMat *past, double t) {
+    double T = opt_->getMaturity();
+    int constadate = t/(opt_->getTimeSteps()*opt_->getMaturity());
+    if(double(constadate*opt_->getTimeSteps()*T)==t)
+    {
+    past = pnl_mat_create(constadate,this->opt_->getSize());  
+    mod_->asset(past,(constadate+1)/opt_->getTimeSteps(),constadate+1,rng_,true); 
+    }
+    else {
+    past = pnl_mat_create(constadate+1,this->opt_->getSize());
+      mod_->asset(past,(constadate+2)/opt_->getTimeSteps(),constadate+2,rng_,true);
+  }
+
+  
+  }
   void MonteCarlo::price(double &prix, double &ic)
   {
     //double ListPriceSimulation[samples_];

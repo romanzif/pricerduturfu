@@ -83,7 +83,6 @@ void BS::asset(PnlMat *path, double T, int N, PnlRng *rng, bool market, PnlVect*
     pnl_mat_free(&sub_path);
     pnl_vect_free(&lastRow);
   }
-
   void BS::shift_asset(PnlMat *shift_path, const PnlMat *path,
            int d, double h, double t, int N, double T) {
     int constaDate = findConstatationDate(T / N, t);

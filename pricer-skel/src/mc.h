@@ -42,6 +42,8 @@ public:
 
   void TestDelta(double t) ;
 
+  void fillMatPast(PnlMat *past, double t);
+
 
 };
 
