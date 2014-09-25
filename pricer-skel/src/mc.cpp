@@ -9,27 +9,28 @@ using namespace std;
     h_ = 0.1;
   	P->extract("sample number", samples_);
     rng_ = rng;
+    H_ = 2;
   }
 
     MonteCarlo::~MonteCarlo() {
     delete(mod_);
   }
 
-  void MonteCarlo::fillMatPast(PnlMat *past, double t) {
-    double T = opt_->getMaturity();
-    int constadate = t/(opt_->getTimeSteps()*opt_->getMaturity());
-    if(double(constadate*opt_->getTimeSteps()*T)==t)
-    {
-    past = pnl_mat_create(constadate,this->opt_->getSize());  
-    mod_->asset(past,(constadate+1)/opt_->getTimeSteps(),constadate+1,rng_,true); 
-    }
-    else {
-    past = pnl_mat_create(constadate+1,this->opt_->getSize());
-      mod_->asset(past,(constadate+2)/opt_->getTimeSteps(),constadate+2,rng_,true);
+  PnlMat * MonteCarlo::extract(const PnlMat *pastIn, int indice) {
+  int N = opt_->getTimeSteps();
+  int D =opt_->getSize();
+  int RebalancementNumber = H_/N;
+  int taille = indice / RebalancementNumber + 1;
+  PnlMat *pastOut = pnl_mat_create(taille, D);
+  for (int i=0;i<taille; i++) {
+    for (int j=0; j<D; j++) {
+      cout<<"i = "<<i<<"et j =  "<<j<<endl;
+      MLET(pastOut, i, j) = MGET(pastIn, i * RebalancementNumber, j);
+    }  
   }
-
+  return pastOut;
+  }  
   
-  }
   void MonteCarlo::price(double &prix, double &ic)
   {
     //double ListPriceSimulation[samples_];
@@ -133,23 +134,41 @@ void MonteCarlo::ProfitAndLoss(double &PL, const PnlMat *delta, double price0, d
   double r = mod_->getR();
   double T =  opt_->getMaturity();
     int D =opt_->getSize();
-  //PnlMat *S = pnl_mat_create(H_ + 1, D);
+    int H = H_ * T;
+  //PnlMat *S = pnl_mat_create(H + 1, D);
 
   PnlVect *Si = pnl_vect_create(D);
   PnlVect *deltai = pnl_vect_create(D);
-  //mod_->simul_market(S, T, H_, rng_);
+  //mod_->simul_market(S, T, H, rng_);
   pnl_mat_get_row(Si, past, 0);
   pnl_mat_get_row(deltai, delta, 0);
   double V = price0 - pnl_vect_scalar_prod(deltai, Si);
-  for (int i = 1; i < H_ + 1; i++) {
+  for (int i = 1; i < H + 1; i++) {
     for (int j = 0; j < D + 1; j++) {
       LET(deltai, j) = MGET(delta, i, j) - MGET(delta, i - 1, j);
     }
-    V = V * exp(r * T / H_) - pnl_vect_scalar_prod(deltai, Si);
+    V = V * exp(r * T / H) - pnl_vect_scalar_prod(deltai, Si);
   }
-  pnl_mat_get_row(Si, past, H_);
-  pnl_mat_get_row(deltai, delta, H_);
+  pnl_mat_get_row(Si, past, H);
+  pnl_mat_get_row(deltai, delta, H);
   PL = V + pnl_vect_scalar_prod(deltai, Si) - payoff;
    pnl_vect_free(&Si);
 pnl_vect_free(&deltai);    
+}
+
+
+void MonteCarlo::TestPnl () {
+double T = opt_->getMaturity();
+double D = opt_->getSize();
+PnlMat *marketmat = pnl_mat_create(T*H_+1,D);
+
+
+mod_->simul_market(marketmat,T,T*H_,rng_);
+pnl_mat_print(marketmat);
+
+//PnlMat *extractmat =pnl_mat_copy( extract(marketmat, T*H_-1));
+
+for (int i =0;i<T*H_+1;i++) {
+pnl_mat_print(extract(marketmat, i));
+ }
 }

@@ -88,7 +88,8 @@ void BS::asset(PnlMat *path, double T, int N, PnlRng *rng, bool market, PnlVect*
     int constaDate = findConstatationDate(T / N, t);
     pnl_mat_clone(shift_path, path);
     for (int i = constaDate + 1; i < N + 1; i++) {
-    MLET(shift_path, i, d) = (1 + h) * MGET(path, i, d);
+    MLET(shift_path, i, 
+      d) = (1 + h) * MGET(path, i, d);
     }
   }
 

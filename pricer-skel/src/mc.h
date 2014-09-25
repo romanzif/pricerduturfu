@@ -43,12 +43,13 @@ public:
 
   void TestDelta(double t) ;
 
+  PnlMat * extract(const PnlMat *pastIn, int indice);
 
   void fillMatPast(PnlMat *past, double t);
 
   void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff, PnlMat *past);
 
-
+void TestPnl ();
 };
 
 #endif /* _MC_H */
