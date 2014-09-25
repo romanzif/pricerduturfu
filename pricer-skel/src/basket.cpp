@@ -12,8 +12,6 @@ Basket::Basket(Param& theParam):Option() {
 	theParam.extract("timestep number", TimeSteps_);
 	theParam.extract("option size", size_);
 	theParam.extract("payoff coefficients", payOffCoeff_, size_);
-	cout << "strike : " << S_ << endl;
-
 }
 
 double Basket::payoff(const PnlMat *path) {
