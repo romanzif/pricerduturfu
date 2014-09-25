@@ -14,9 +14,10 @@ public:
   double h_; /*! pas de différence finie */
   int samples_; /*! nombre de tirages Monte Carlo */
   PnlRng *rng_;
+  int H_;
 
     /*constructeur del fuego*/
-  MonteCarlo(Param *P, Option *opt, PnlRng *rng);  
+  MonteCarlo(Param *P, Option *opt, PnlRng *rng, double H);  
     ~MonteCarlo();
   /**
    * Calcule le prix de l'option à la date 0
@@ -38,7 +39,7 @@ public:
    */
   void price(const PnlMat *past, double t, double &prix, double &ic);
 
-  void delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic);
+  void delta(const PnlMat *past, double t, PnlVect *delta);
 
   void TestDelta(double t) ;
 

@@ -2,18 +2,20 @@
 
 using namespace std;
 
-	MonteCarlo::MonteCarlo(Param *P, Option *opt, PnlRng *rng)
+	MonteCarlo::MonteCarlo(Param *P, Option *opt, PnlRng *rng, double H)
   {
   	mod_ = new BS(P);
   	opt_= opt;
     h_ = 0.1;
   	P->extract("sample number", samples_);
     rng_ = rng;
+     H_ = H;
   }
 
     MonteCarlo::~MonteCarlo() {
     delete(mod_);
   }
+
   void MonteCarlo::price(double &prix, double &ic)
   {
     //double ListPriceSimulation[samples_];
@@ -64,7 +66,7 @@ using namespace std;
   pnl_mat_free(&mat);
   }
 
-void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic) {
+void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
   // initialisation des données (calcul g+ et g- ainsi que S~ avec asset)
   double T =  opt_->getMaturity();
   int D = mod_->getSize();
@@ -109,28 +111,31 @@ void MonteCarlo::TestDelta(double t)
   {
     MLET(past,0,i) = GET(mod_->GetSpot(),i);
   } 
-  delta(past, t, deltavect,ic);
+  delta(past, t, deltavect);
   pnl_vect_print(deltavect);
 }
 
-void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff) {
+void MonteCarlo::ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff) {
   double r = mod_->getR();
   double T =  opt_->getMaturity();
-  PnlMat S = pnl_mat_create(H + 1, D);
-  PnlVect Si = pnl_vect_create(D);
-  PnlVect deltai = pnl_vect_create(D);
-  bool market = true;
-  mod_->simul_market(S, T, H, rng_, market);
+  int D = opt_->getSize();
+  PnlMat* S = pnl_mat_create(H_ + 1, D);
+  PnlVect* Si = pnl_vect_create(D);
+  PnlVect* deltai = pnl_vect_create(D);
+  mod_->simul_market(S, T, H_, rng_);
   pnl_mat_get_row(Si, S, 0);
   pnl_mat_get_row(deltai, delta, 0);
   double V = price0 - pnl_vect_scalar_prod(deltai, Si);
-  for (int i = 1; i < H + 1; i++) {
+  for (int i = 1; i < H_ + 1; i++) {
     for (int j = 0; j < D + 1; j++) {
       LET(deltai, j) = MGET(delta, i, j) - MGET(delta, i - 1, j);
     }
-    V = V * exp(r * T / H) - pnl_vect_scalar_prod(deltai, Si);
+    V = V * exp(r * T / H_) - pnl_vect_scalar_prod(deltai, Si);
   }
-  pnl_mat_get_row(Si, S, H);
-  pnl_mat_get_row(deltai, delta, H);
+  pnl_mat_get_row(Si, S, H_);
+  pnl_mat_get_row(deltai, delta, H_);
   PL = V + pnl_vect_scalar_prod(deltai, Si) - payoff;
+  pnl_mat_free(&S);
+  pnl_vect_free(&Si);
+  pnl_vect_free(&deltai);
 }
