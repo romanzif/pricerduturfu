@@ -21,6 +21,10 @@ using namespace std;
     return size_;
   }
 
+  PnlVect* BS::getTrend(){
+    return trend;
+  }
+
   BS::~BS() {
     pnl_vect_free(&sigma_);
     pnl_vect_free(&spot_);

@@ -28,6 +28,7 @@ public:
   ~BS();
 
   int getSize();
+  PnlVect* getTrend();
 
   /**
    * Génère une trajectoire du modèle

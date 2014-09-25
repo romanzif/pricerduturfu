@@ -15,6 +15,9 @@
 #include <stdio.h> 
 #include <dirent.h> 
 #include <sys/types.h>
+#include <cstdlib>
+#include <limits>
+#include <string>
 
 using namespace std;
 
@@ -22,51 +25,63 @@ int main(int argc, char **argv)
 {
   bool couverture = false;
   char * Infile = argv[1];
-      if(Infile != NULL && strcmp(Infile,"-c") == 0) {
-	cout << "pricer lancé avec option -c" << endl;
-	couverture = true;
-	Infile = argv[2];
-      } else {
-	cout << "Pricer lancé sans l'option -c \n" << endl;
-	cout << "Aucun fichier source en entrée, veuillez choisir celui que vous voulez" << endl;
-      }
+  if(Infile != NULL && strcmp(Infile,"-c") == 0) {
+    cout << "Pricer lancé avec option -c" << endl;
+    couverture = true;
+    Infile = argv[2];
+  } else {
+    cout << "Pricer lancé sans l'option -c \n" << endl;
+    cout << "Aucun fichier source en entrée, veuillez choisir celui que vous voulez" << endl;
+  }
       
-      if (Infile == NULL || strcmp(Infile,"")==0) {
-  	std::cout << "\n              Liste des options disponibles : \n" << std::endl;
-	DIR* rep = NULL;
-        struct dirent* fichierLu = NULL; /* Déclaration d'un pointeur vers la structure dirent. */
-	rep = opendir("../data");
-	fichierLu = readdir(rep);
-	fichierLu = readdir(rep);
-	int i=1;
-	while ((fichierLu = readdir(rep)) != NULL)
-	{
-		printf("%i : '%s' \n", i, fichierLu->d_name); 
-		i++;
-	}
+  if (Infile == NULL || strcmp(Infile,"")==0) {
+    std::cout << "\n              Liste des options disponibles : \n" << std::endl;
+    DIR* rep = NULL;
+    struct dirent* fichierLu = NULL; /* Déclaration d'un pointeur vers la structure dirent. */
+    rep = opendir("../data");
+    fichierLu = readdir(rep);
+    fichierLu = readdir(rep);
+    int i=1;
+    while ((fichierLu = readdir(rep)) != NULL)
+      {
+	printf("%i : '%s' \n", i, fichierLu->d_name); 
+	i++;
+      }
 	
-	int nombre=0;
-	while ( nombre<1 || nombre>i-1)
-	{
-		std::cout << "\n Entrez un nombre valide: ";
-		std::cin >> nombre;
-	}
-	closedir(rep);
-	rep = opendir("../data");
-	fichierLu = readdir(rep);
-	fichierLu = readdir(rep);
+    int nombre=0;
+    bool stay_in = true;
+    std::cout << "\n Entrez un nombre valide: ";
+    std::cin >> nombre;
+    while(std::cin.fail() || stay_in)
+      {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+        if (!(nombre<1 || nombre>i-1)) {
+          stay_in = false;
+        } else {
+          std::cout << "\n Entrez un nombre valide: ";
+          std::cin >> nombre;
+        }
+                
+      }
+
+    closedir(rep);
+    rep = opendir("../data");
+    fichierLu = readdir(rep);
+    fichierLu = readdir(rep);
 	
-	i=0;
-	while (i<nombre)
-	{
-		(fichierLu = readdir(rep));
-		i++;
-	}
-        printf("\n              Chargement de l'option : %s \n \n", fichierLu->d_name);
-	char repertoire []="../data/";
-	Infile = strcat(repertoire,fichierLu->d_name);
-      } 
-        Param *P = new Parser(Infile);
+    i=0;
+    while (i<nombre)
+      {
+	(fichierLu = readdir(rep));
+	i++;
+      }
+    printf("\n              Chargement de l'option : %s \n \n", fichierLu->d_name);
+    char repertoire []="../data/";
+    Infile = strcat(repertoire,fichierLu->d_name);
+    closedir(rep);
+  } 
+  Param *P = new Parser(Infile);
 
   PnlRng * rng = pnl_rng_create(PNL_RNG_MERSENNE);
   pnl_rng_sseed(rng,0);
@@ -74,7 +89,7 @@ int main(int argc, char **argv)
   P->extract("option type", typeOption);
   Option *opt;
 
- if (strcmp(typeOption,"asian")==0)
+  if (strcmp(typeOption,"asian")==0)
     {
 	
       opt = new Asian(*P);
@@ -110,12 +125,6 @@ int main(int argc, char **argv)
                       {cout<<"Type Non reconnu";
                       exit(1);
                       }
-
-double date=-1;
-while(date<0.0 || date > opt->getMaturity()){
-	cout << "\nEn quelle date voulez vous afficher le prix de l'option ? (compris entre 0 et "<< opt->getMaturity()<< ")  : ";   
-	cin>>date;	
-}
 	
          
          printf("\n              Execution de l'algorithme de Monte Carlo ... \n \n");   
@@ -131,30 +140,39 @@ cout<<"Le prix vaut : "<<prix<<endl;
 cout<<"L'intervalle de confiance est : ["<<prix - ic<< "," << prix + ic << "]"<<endl;
 
  if(couverture ==true){
-   printf("\n --------Erreur de couverture--------- \n");
-
-   char  reponse[2];
-   bool b = false;
-   while (b != true) {
-     cout<<"\nVoulez vous afficher le Delta en date "<<date<<" ? (y/n) "<<endl;   
-     cin >> reponse;
-     if (strcmp(reponse,"y") == 0) {
-       cout<<"Calcul du delta en cours"<<endl;
-       mc->TestDelta(0);
-       b = true;
-     } else if  (strcmp(reponse,"n") == 0){
-       b = true;
-     }
-   }
-   PnlVect * currentdelta = pnl_vect_new();
-   // mc->mod_.simul_market(path, 
-   //for (double i = 0; i < mc->H_; i++) {
-   //	mc->delta(mc->mod_, i, currentdelta);
-	
-   //}
-   cout << "L'erreur de couverture vaut : ";
-   pnl_vect_free(&currentdelta);
- }
+    printf("\n --------Erreur de couverture--------- \n");
+    if (mc->getH() == 0) {
+      cout << "Pas de hedging date spécifiée dans le fichier en entrée, impossible de continuer" <<endl;
+    } else if (mc->getH() % mc->getN() != 0) {
+      cout << "Les dates de constatation ne coincident pas avec les dates de rebalancement, impossible de continuer" <<endl;
+    } else if (mc->getTrend() == NULL) {
+      cout << "Pas de trend spécidié dans le fichier en entrée, impossible de continuer" <<endl;
+    } else {
+      cout<<"Simulation du marché en cours"<<endl;
+      PnlMat* marketmat = pnl_mat_create_from_zero(mc->getT()*mc->getH()+1,mc->getD());
+      mc->simul_market(marketmat);
+      
+      cout<<"\nCalcul des delta en cours"<<endl;
+      PnlMat* MatDelta = pnl_mat_create(marketmat->m,mc->getD());
+      for (int i =0;i < marketmat->m ;i++) {
+        PnlVect *deltavect= pnl_vect_create(mc->getD()); 
+        PnlMat * currentMat = mc->extract(marketmat, i);
+        mc->delta(currentMat, i/mc->getH(), deltavect);
+        pnl_mat_set_row(MatDelta,deltavect,i);
+        pnl_vect_free(&deltavect);
+        pnl_mat_free(&currentMat);
+      }
+      cout<<"\nCalcul du PnL"<<endl;
+      double PnL = 0;
+      PnlMat* my_mat = mc->extract(marketmat, marketmat->m-1);
+      mc->ProfitAndLoss(PnL,MatDelta,prix, my_mat, marketmat);
+      cout << "L'erreur de couverture vaut : " << PnL << endl;
+      pnl_mat_free(&marketmat);
+      pnl_mat_free(&MatDelta);
+      pnl_mat_free(&my_mat);
+    }
+    
+  }
 
   delete(P);
   pnl_rng_free(&rng);

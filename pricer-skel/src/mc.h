@@ -47,9 +47,16 @@ public:
 
   void fillMatPast(PnlMat *past, double t);
 
-  void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff, PnlMat *past);
+  void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, const PnlMat *pastN, const PnlMat *past);
 
-void TestPnl ();
+  void simul_market(PnlMat* marketmat);
+
+
+  int getH();
+  double getT();
+  int getD();
+  int getN();
+  PnlVect* getTrend();
 };
 
 #endif /* _MC_H */
