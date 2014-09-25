@@ -129,24 +129,27 @@ void MonteCarlo::TestDelta(double t)
   pnl_vect_print(deltavect);
 }
 
-void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff) {
+void MonteCarlo::ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff, PnlMat *past) {
   double r = mod_->getR();
   double T =  opt_->getMaturity();
-  PnlMat S = pnl_mat_create(H + 1, D);
-  PnlVect Si = pnl_vect_create(D);
-  PnlVect deltai = pnl_vect_create(D);
-  bool market = true;
-  mod_->simul_market(S, T, H, rng_, market);
-  pnl_mat_get_row(Si, S, 0);
+    int D =opt_->getSize();
+  //PnlMat *S = pnl_mat_create(H_ + 1, D);
+
+  PnlVect *Si = pnl_vect_create(D);
+  PnlVect *deltai = pnl_vect_create(D);
+  //mod_->simul_market(S, T, H_, rng_);
+  pnl_mat_get_row(Si, past, 0);
   pnl_mat_get_row(deltai, delta, 0);
   double V = price0 - pnl_vect_scalar_prod(deltai, Si);
-  for (int i = 1; i < H + 1; i++) {
+  for (int i = 1; i < H_ + 1; i++) {
     for (int j = 0; j < D + 1; j++) {
       LET(deltai, j) = MGET(delta, i, j) - MGET(delta, i - 1, j);
     }
-    V = V * exp(r * T / H) - pnl_vect_scalar_prod(deltai, Si);
+    V = V * exp(r * T / H_) - pnl_vect_scalar_prod(deltai, Si);
   }
-  pnl_mat_get_row(Si, S, H);
-  pnl_mat_get_row(deltai, delta, H);
+  pnl_mat_get_row(Si, past, H_);
+  pnl_mat_get_row(deltai, delta, H_);
   PL = V + pnl_vect_scalar_prod(deltai, Si) - payoff;
+   pnl_vect_free(&Si);
+pnl_vect_free(&deltai);    
 }

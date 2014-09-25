@@ -14,6 +14,7 @@ public:
   double h_; /*! pas de différence finie */
   int samples_; /*! nombre de tirages Monte Carlo */
   PnlRng *rng_;
+  int H_;
 
     /*constructeur del fuego*/
   MonteCarlo(Param *P, Option *opt, PnlRng *rng);  
@@ -45,7 +46,7 @@ public:
 
   void fillMatPast(PnlMat *past, double t);
 
-  void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff);
+  void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff, PnlMat *past);
 
 
 };
