@@ -42,7 +42,10 @@ public:
 
   void TestDelta(double t) ;
 
+
   void fillMatPast(PnlMat *past, double t);
+
+  void ProfitAndLoss(double &PL, const PnlMat *delta, double price0, double payoff);
 
 
 };
