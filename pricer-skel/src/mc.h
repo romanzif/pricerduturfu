@@ -17,7 +17,7 @@ public:
   int H_;
 
     /*constructeur del fuego*/
-  MonteCarlo(Param *P, Option *opt, PnlRng *rng, double H);  
+  MonteCarlo(Param *P, Option *opt, PnlRng *rng);  
     ~MonteCarlo();
   /**
    * Calcule le prix de l'option à la date 0

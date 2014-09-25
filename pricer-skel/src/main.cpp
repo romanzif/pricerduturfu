@@ -120,7 +120,7 @@ while(date<0.0 || date > opt->getMaturity()){
          
          printf("\n              Execution de l'algorithme de Monte Carlo ... \n \n");   
 
-MonteCarlo *mc = new MonteCarlo(P,opt,rng,96);
+MonteCarlo *mc = new MonteCarlo(P,opt,rng);
 double prix=0;
 double ic =0;
 

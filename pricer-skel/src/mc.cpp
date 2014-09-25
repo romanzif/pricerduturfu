@@ -2,18 +2,17 @@
 
 using namespace std;
 
-	MonteCarlo::MonteCarlo(Param *P, Option *opt, PnlRng *rng, double H)
-  {
-  	mod_ = new BS(P);
-  	opt_= opt;
-	P->extract("fd step",h_);
-	P->extract("hedging date number",H_);
-  	P->extract("sample number", samples_);
-    rng_ = rng;
-    H_ = 2;
+MonteCarlo::MonteCarlo(Param *P, Option *opt, PnlRng *rng)
+{
+  mod_ = new BS(P);
+  opt_= opt;
+  P->extract("fd step",h_);
+  P->extract("hedging date number",H_);
+  P->extract("sample number", samples_);
+  rng_ = rng;
+}
 
-
-    MonteCarlo::~MonteCarlo() {
+  MonteCarlo::~MonteCarlo() {
     delete(mod_);
   }
 
