@@ -111,11 +111,6 @@ int main(int argc, char **argv)
                       exit(1);
                       }
 
-double date=-1;
-while(date<0.0 || date > opt->getMaturity()){
-	cout << "\nEn quelle date voulez vous afficher le prix de l'option ? (compris entre 0 et "<< opt->getMaturity()<< ")  : ";   
-	cin>>date;	
-}
 	
          
          printf("\n              Execution de l'algorithme de Monte Carlo ... \n \n");   
@@ -136,8 +131,8 @@ cout<<"L'intervalle de confiance est : ["<<prix - ic<< "," << prix + ic << "]"<<
    char  reponse[2];
    bool b = false;
    while (b != true) {
-     cout<<"\nVoulez vous afficher le Delta en date "<<date<<" ? (y/n) "<<endl;   
-     cin >> reponse;
+         cout<<"\nVoulez vous afficher le Delta ? (y/n) "<<endl;   
+         cin >> reponse;
      if (strcmp(reponse,"y") == 0) {
        cout<<"Calcul du delta en cours"<<endl;
        mc->TestDelta(0);
